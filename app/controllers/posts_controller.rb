@@ -1,14 +1,11 @@
 class PostsController < ApplicationController
 	def index
-		puts params
-		render json: { "success": true }, status: :ok
+		tags = params[:tags] ? params[:tags].split(',') : []
+		sort_by = params[:sortBy] ? params[:sortBy] : 'id'
+		direction = params[:direction] ? params[:direction] : 'asc'
 
-		tags = params[:tag] ? params[:tag].split(',') : []
-		sortBy = params[:sortBy] ? params[:sortBy] : 'id'
-		direction = params[:direction]
-
-		validSortByList = ["id", "reads", "likes", "popularity"]
-		validDirectionList = ["asc", "desc"]
+		sort_by_list = ["id", "reads", "likes", "popularity"]
+		direction_list = ["asc", "desc"]
 
 
 
@@ -17,23 +14,27 @@ class PostsController < ApplicationController
 			return
 		end
 
-		if (!validSortByList.include?(sortBy) )
-				render json: { "error": "sortBy parameter is invalid" }, status: 400
-				return
-
-		elsif (direction) && (!validDirectionList.include?(direction) )
+		if !sort_by_list.include?(sort_by)
 				render json: { "error": "sortBy parameter is invalid" }, status: 400
 				return
 		end
 
-		response = []
+		if !direction_list.include?(direction)
+				render json: { "error": "sortBy parameter is invalid" }, status: 400
+				return
+		end
+
+		posts = []
 
 		for tag in tags do
-				result = HTTParty.get( "https://api.hatchways.io/assessment/blog/posts?tag=#{tag}")["posts"]
-				response.push(result)
+				result = HTTParty.get( "https://api.hatchways.io/assessment/blog/posts?tag=#{tag}")
+				posts.push(result["posts"])
 		end
 
-		render json: { "posts": response.flatten(1).uniq}, status: 200
+		posts = posts.flatten.sort { |a,b| a[sort_by.to_s] <=> b[sort_by.to_s] }
+		posts = posts.reverse if direction == 'desc'
+
+		render json: { "posts": posts.uniq }, status: 200
 	end
 end
 
