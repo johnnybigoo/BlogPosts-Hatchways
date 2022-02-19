@@ -2,6 +2,11 @@ require 'rails_helper'
 
 RSpec.describe "Apis", type: :request do
   describe "GET /index" do
-    pending "add some examples (or delete) #{__FILE__}"
+    it "ping" do
+			get '/api/ping'
+
+			result = JSON.parse(response.body)
+			expect(result['success']).to eq(true)
+    end
   end
 end

@@ -6,7 +6,7 @@ require_relative '../config/environment'
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'rspec/rails'
 
-# Dir[Rails.root.join('spec', 'support', '**', '*.rb')].sort.each { |f| require f }
+Dir[Rails.root.join('spec', 'support', '**', '*.rb')].sort.each { |f| require f }
 
 # require database cleaner at the top level
 require 'database_cleaner'
@@ -34,6 +34,7 @@ RSpec.configure do |config|
 
 	# add `FactoryBot` methods
 	config.include FactoryBot::Syntax::Methods
+	config.include RequestSpecHelper, type: :request
 
 	# start by truncating all the tables but then use the faster transaction strategy the rest of the time.
   config.before(:suite) do

@@ -20,7 +20,7 @@ class PostsController < ApplicationController
 		end
 
 		if !direction_list.include?(direction)
-				render json: { "error": "sortBy parameter is invalid" }, status: 400
+				render json: { "error": "direction parameter is invalid" }, status: 400
 				return
 		end
 
