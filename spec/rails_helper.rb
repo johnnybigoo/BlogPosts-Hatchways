@@ -6,6 +6,8 @@ require_relative '../config/environment'
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'rspec/rails'
 
+require 'vcr'
+
 Dir[Rails.root.join('spec', 'support', '**', '*.rb')].sort.each { |f| require f }
 
 # require database cleaner at the top level
@@ -48,4 +50,10 @@ RSpec.configure do |config|
       example.run
     end
   end
+end
+
+VCR.configure do |config|
+  config.cassette_library_dir = "spec/cassettes"
+	config.allow_http_connections_when_no_cassette = true
+  config.hook_into :webmock
 end

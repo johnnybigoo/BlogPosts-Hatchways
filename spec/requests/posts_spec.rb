@@ -36,64 +36,84 @@ RSpec.describe "Posts", type: :request do
 
   describe 'GET /api/posts with valid params' do
     context 'when tags is valid' do
-      before { get '/api/posts', params: { tags: 'history' } }
 
       it 'should return status code 200' do
-        expect(response).to have_http_status(200)
+					VCR.use_cassette("posts_valid_params_history") do
+						get '/api/posts', params: { tags: 'history' }
+						expect(response).to have_http_status(200)
+					end
       end
 
-      before { get '/api/posts', params: { tags: 'history,tech' } }
 
       it 'should return status code 200' do
-        expect(response).to have_http_status(200)
+				VCR.use_cassette("posts_valid_params_history_tech") do
+					get '/api/posts', params: { tags: 'history,tech' }
+					expect(response).to have_http_status(200)
+				end
       end
 
       it 'should have valid posts' do
-        expect(json['posts']).not_to be_empty
-        values = values_from_json('id')
-        expect(values).to eq(values.sort)
+				VCR.use_cassette("posts_valid_params_history_tech") do
+					get '/api/posts', params: { tags: 'history,tech' }
+					expect(json['posts']).not_to be_empty
+					values = values_from_json('id')
+					expect(values).to eq(values.sort)
+				end
       end
 
       it 'should have required keys in response' do
-        expect(json['posts'][0].keys).to contain_exactly('author', 'authorId', 'id',
-                                                         'likes', 'popularity', 'reads', 'tags')
+				VCR.use_cassette("posts_valid_params_history_tech") do
+					get '/api/posts', params: { tags: 'history,tech' }
+					expect(json['posts'][0].keys).to contain_exactly('author', 'authorId', 'id',
+																													'likes', 'popularity', 'reads', 'tags')
+				end
       end
     end
 
-    context 'when sortBy is the param reads' do
-      before { get '/api/posts', params: { tags: 'history,tech', sortBy: 'reads' } }
+    context 'when sortBy have the param reads' do
 
-      it 'should fail if sortBy is invalid' do
-        expect(json['posts']).not_to be_empty
-        values = values_from_json('reads')
-        expect(values).to eq(values.sort)
+      it 'should pass if sortBy is valid' do
+				VCR.use_cassette("sortby_with_valid_params") do
+					get '/api/posts', params: { tags: 'history,tech', sortBy: 'reads' }
+					expect(json['posts']).not_to be_empty
+					values = values_from_json('reads')
+					expect(values).to eq(values.sort)
+				end
       end
     end
 
-    context 'when sortBy is likes' do
-      before { get '/api/posts', params: { tags: 'history,tech', sortBy: 'likes' } }
+    context 'when sortBy have the param likes' do
 
-      it 'should fail if sortBy is invalid' do
-        values = values_from_json('likes')
-        expect(values).to eq(values.sort)
+      it 'should pass if sortBy is valid' do
+				VCR.use_cassette("sortby_with_valid_params") do
+					get '/api/posts', params: { tags: 'history,tech', sortBy: 'likes' }
+					expect(json['posts']).not_to be_empty
+					values = values_from_json('likes')
+					expect(values).to eq(values.sort)
+				end
       end
     end
 
-		context 'when sortBy is popularity' do
-      before { get '/api/posts', params: { tags: 'history,tech', sortBy: 'popularity' } }
+		context 'when sortBy have the param popularity' do
 
-      it 'should fail if sortBy is invalid' do
-        values = values_from_json('popularity')
-        expect(values).to eq(values.sort)
+      it 'should pass if sortBy is valid' do
+				VCR.use_cassette("sortby_with_valid_params") do
+					get '/api/posts', params: { tags: 'history,tech', sortBy: 'popularity' }
+					expect(json['posts']).not_to be_empty
+					values = values_from_json('popularity')
+					expect(values).to eq(values.sort)
+				end
       end
     end
 
     context 'when direction is valid' do
-      before { get '/api/posts', params: { tags: 'history,tech', sortBy: 'popularity', direction: 'desc' } }
 
-      it 'should fail if sortBy is invalid' do
-        values = values_from_json('popularity')
-        expect(values).to eq(values.sort.reverse)
+      it 'should return a list of post reversed' do
+				VCR.use_cassette("direction_with_valid_params") do
+					get '/api/posts', params: { tags: 'history,tech', sortBy: 'popularity', direction: 'desc' }
+					values = values_from_json('popularity')
+					expect(values).to eq(values.sort.reverse)
+				end
       end
     end
   end
