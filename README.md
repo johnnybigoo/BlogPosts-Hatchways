@@ -1,24 +1,27 @@
-# README
+# Blog Posts
+### A Ruby on Rails API project for Hatchways
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+<!-- ABOUT THE PROJECT -->
+## About The Project
 
-Things you may want to cover:
+Blog Posts is an assessment provide by Hatchways, in this assessment, you will write a simple backend JSON API.
 
-* Ruby version
+<br>
 
-* System dependencies
+## Installation
 
-* Configuration
+Clone or download the .zip for this project.
 
-* Database creation
+Here are the commands that will have to be entered in your terminal to start the server:
+- ruby -v (To check if a corresponding version need to be installed)
+- rails -v (To check if a corresponding version need to be installed)
+- bundle install (To install all the necessary Gems)
+- rails s (To run the server on the port 3000)
+- bundle exec rspec (To run the suite of tests using Rspec)
 
-* Database initialization
+<br>
 
-* How to run the test suite
+## Built With
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+* [Ruby V-2.7.1](https://www.ruby-lang.org/en/)
+* [Rails V-7.0.2.2](https://guides.rubyonrails.org/)
